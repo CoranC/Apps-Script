@@ -4,10 +4,7 @@
  * Creates toTitleCase function on the String prototype.
  */
 String.prototype.toTitleCase = function () {
-    return this.replace(/\w\S*/g,
-      function(txt){
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      });
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
 
 /**
@@ -42,12 +39,25 @@ function grabEntry(){
     return;
   }
   google.script.run
-   .withFailureHandler(showError)
+   .withFailureHandler()
    ._saveEntry(date, username, entry);
   saveButton.value = 'Saved';
   saveButton.style.color = '#00d0ff';
-  document.getElementById('gratefulText').readOnly = true;
+  appendTempEntry(entry);
 }
+
+/**
+ * Appends a new row to the table with the value and requests saving to the database.
+ * @param {String} The value to add to the table.
+ */
+function appendTempEntry(value){
+  var table = document.getElementById("gratefulTable");
+  var row = table.insertRow();
+  row.innerHTML = '<td><ul><li>' + value + '</li></ul></td>' +
+      ' <td><input name="cb" type="checkbox"' +
+      ' onclick="strikeGratefulText(this);"></td>';
+}
+
 
 /**
  * Makes the element larger based on the length of the elements value.
@@ -62,7 +72,7 @@ function autoGrow(element) {
  */
 function getPastGratefuls(){
   var data = google.script.run
-    .withFailureHandler(showError)
+    .withFailureHandler()
     ._getPastGratefuls();
   return data;
 }
@@ -81,4 +91,51 @@ function actionPastGratefuls(){
     pastGratefulsButton.value = 'Show Memories';
   }
 }
+
+/**
+ * Removes any rows that have ticked checkboxes and requests removal from database.
+ * Also hides button once rows have been removed.
+ */
+function removeGratefuls(){
+  var idsToRemove = [];
+  var rows = document.getElementsByTagName("tr");
+  for(var i = rows.length-1; i >= 0; i--){
+    row = rows[i];
+    if(row.children[0].tagName == "TD"){
+      checkbox = row.children[1].children[0];
+      if(checkbox.checked){
+        idsToRemove.push(i);
+        row.remove();
+      }
+    }
+  }
+  idsToRemove.sort(function(a, b){return a-b})
+  google.script.run
+    .withFailureHandler()
+    ._deleteGratefulsFromDb(idsToRemove);
+
+  var removeButton = document.getElementById("removeButton");
+  removeButton.style.visibility = "hidden";
+}
+
+/**
+ * Makes remove button visisble and strikes through any grateful values that have been selected.
+ * @param {Element} The input element of type 'checkbox'.
+ */
+function strikeGratefulText(cb){
+  var removeButton = document.getElementById("removeButton");
+  if(removeButton.style.visibility == "hidden"){
+    removeButton.style = "";
+    removeButton.style.visibility = "visibile";
+  }
+  cb.parentElement.parentElement;
+  var row = cb.parentElement.parentElement;
+  var liElem = row.children[0].children[0].children[0];
+  if(cb.checked){
+    liElem.style = "text-decoration: line-through; font-style: italic;";
+  }else{
+    liElem.style = "";
+  }
+}
+
 </script>

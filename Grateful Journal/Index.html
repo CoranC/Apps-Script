@@ -26,13 +26,17 @@
     <div id='pastGratefulsDiv' class='pastGratefulsDivHidden side'>
       <? var data = _getPastGratefuls(); ?>
       <? if(data) { ?>
-        <table>
-          <tr><td style="font-size:18px">I Have Been <span class="gratefulTitleBlue">Grateful</span> For...</td></tr>
+        <table id="gratefulTable">
+          <tr>
+            <th>I Have Been <span class="gratefulTitleBlue">Grateful</span> For...</th>
+            <th><input id="removeButton" type="button" value="Remove" style="visibility:hidden;" onClick="removeGratefuls()"></th>
+          </tr>
           <? for (var i = 0; i < data.length; i++) { ?>
             <tr>
               <? for (var j = 0; j < data[i].length; j++) { ?>
                 <? if(data[i][j]) { ?>
                   <td><ul><li><?= data[i][j] ?></li></ul></td>
+                  <td><input name="cb" type="checkbox" onClick="strikeGratefulText(this);"></td>
                 <? } ?>
               <? } ?>
             </tr>

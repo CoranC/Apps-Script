@@ -83,5 +83,26 @@ function _saveEntry(date, username, entry) {
  */
 function _getPastGratefuls() {
   var sheet = SPREADSHEET.getSheetByName(GRATEFUL_DB_SHEET);
-  return sheet.getRange(2, 3, sheet.getLastRow(), 1).getValues();
+  data = sheet.getRange(2, 3, sheet.getLastRow()-1, 1).getValues();
+  return data;
+}
+
+/**
+ * Removes data from the spreadsheet.
+ * @param {number[]} A list of ids to correspond to the rows of the database.
+ */
+function _deleteGratefulsFromDb(listOfRowIds) {
+  Logger.log(listOfRowIds);
+  var sheet = SPREADSHEET.getSheetByName(GRATEFUL_DB_SHEET);
+  range = sheet.getRange(1, 1, sheet.getLastRow(), 3);
+  values = range.getValues();
+  range.clearContent();
+  for(var i = values.length-1; i >= 0; i--){
+    if(i == listOfRowIds[listOfRowIds.length-1]){
+      values.splice(i, 1);
+      listOfRowIds.splice(listOfRowIds.length-1, 1);
+    }
+  }
+  // replace values on sheet
+  sheet.getRange(1, 1, values.length, 3).setValues(values);
 }
