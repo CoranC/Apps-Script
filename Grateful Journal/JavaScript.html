@@ -1,0 +1,84 @@
+<script>
+
+/**
+ * Creates toTitleCase function on the String prototype.
+ */
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g,
+      function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      });
+};
+
+/**
+ * Alerts the user to an error and logs it to the console.
+ * @param {String} The error message.
+ */
+function showError(error) {
+  console.log(error);
+  window.alert('An error has occurred, please try again.');
+}
+
+/**
+ * Reverts the 'Save' button to its previous style.
+ */
+function resetSaveButtonStyle() {
+    saveButton = document.getElementById('save');
+    saveButton.style.color='grey';
+    saveButton.value ='Save';
+}
+
+/**
+ * Grabs the grateful entry, reformats it to Titlecase and calls _SaveEntry() with the data.
+ */
+function grabEntry(){
+  var date = document.getElementById('date').innerText;
+  var username = document.getElementById('username').innerText;
+  var entry = document.getElementById('gratefulText').value.toTitleCase();
+  saveButton = document.getElementById('save');
+  if(!entry ){
+    saveButton.value = 'Nothing to save';
+    saveButton.style.color = '#d85949';
+    return;
+  }
+  google.script.run
+   .withFailureHandler(showError)
+   ._saveEntry(date, username, entry);
+  saveButton.value = 'Saved';
+  saveButton.style.color = '#00d0ff';
+  document.getElementById('gratefulText').readOnly = true;
+}
+
+/**
+ * Makes the element larger based on the length of the elements value.
+ * @param {Element} A dom element.
+ */
+function autoGrow(element) {
+  element.rows = (element.value.length / 17) + 1;
+}
+
+/**
+ * Calls _getPastGratefuls() to retrieve the data from the spreadsheet.
+ */
+function getPastGratefuls(){
+  var data = google.script.run
+    .withFailureHandler(showError)
+    ._getPastGratefuls();
+  return data;
+}
+
+/**
+ * Hides or displays the grateful data and updates button.
+ */
+function actionPastGratefuls(){
+  var pastGratefulsDiv = document.getElementById('pastGratefulsDiv');
+  var pastGratefulsButton = document.getElementById('pastGratefulsButton');
+  if(pastGratefulsDiv.className == 'pastGratefulsDivHidden side'){
+    pastGratefulsDiv.className = 'pastGratefulsDivShown side';
+    pastGratefulsButton.value = 'Hide Memories';
+  }else{
+    pastGratefulsDiv.className = 'pastGratefulsDivHidden side'
+    pastGratefulsButton.value = 'Show Memories';
+  }
+}
+</script>

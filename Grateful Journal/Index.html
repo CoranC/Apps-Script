@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+</head>
+<body>
+  <div class='middleDiv'>
+  <p id='date' class='side'><?= _getDate() ?></p>
+  <p id='username' class='side'><?= _getUsername() ?></p>
+  <div id='gratefulDiv'>
+    <span class='gratefulTitle gratefulTitleGrey'>TODAY, I AM GRATEFUL FOR</span>
+    <span>
+      <textarea onfocus='this.className += " noBorder"; resetSaveButtonStyle()'
+        id='gratefulText'
+        class='gratefulTitle gratefulTitleBlue'
+        rows='1'
+        onkeyup='autoGrow(this)'></textarea>
+    </span>
+    <div id='saveDiv'>
+      <input id='save' type='button' value='Save' class='side' style='margin-top:60px;' onclick='grabEntry();' />
+    </div>
+
+    <div id='pastGratefulsButtonDiv'>
+      <input id='pastGratefulsButton' type='button' value='Show Memories' class='gratefulTitleBlue' onclick='actionPastGratefuls()' />
+    </div>
+    <div id='pastGratefulsDiv' class='pastGratefulsDivHidden side'>
+      <? var data = _getPastGratefuls(); ?>
+      <? if(data) { ?>
+        <table>
+          <tr><td style="font-size:18px">I Have Been <span class="gratefulTitleBlue">Grateful</span> For...</td></tr>
+          <? for (var i = 0; i < data.length; i++) { ?>
+            <tr>
+              <? for (var j = 0; j < data[i].length; j++) { ?>
+                <? if(data[i][j]) { ?>
+                  <td><ul><li><?= data[i][j] ?></li></ul></td>
+                <? } ?>
+              <? } ?>
+            </tr>
+          <? } ?>
+        </table>
+      <? } else { ?>
+        <span>No memories yet...</span>
+      <? } ?>
+    </div>
+  </div>
+</div>
+<?!= HtmlService.createHtmlOutputFromFile('JavaScript').getContent(); ?>
+</body>
+</html>
