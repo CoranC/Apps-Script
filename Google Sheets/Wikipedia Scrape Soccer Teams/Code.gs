@@ -9,7 +9,7 @@ var SHEET = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
  * @const {String}
  */
 var URL_PREFIX = 'https://en.wikipedia.org/wiki/Category:'
-    + Association_football_clubs_established_in_';
+    + 'Association_football_clubs_established_in_';
 
 /**
  * Calls getTeamsForYear method for each year between startYear and endYear.
