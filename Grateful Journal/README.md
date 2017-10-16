@@ -1,4 +1,4 @@
-###The Grateful Journal.
+### The Grateful Journal.
 
 This is a simple web app inspired by a similar app that records grateful data entries. This web app is not for sale or for commercial purposes.
 
