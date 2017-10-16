@@ -1,3 +1,3 @@
-#Apps Script
+# Apps Script
 
-###This repo documents different Apps Script projects & scripts I have written.
+This repo documents different Apps Script projects & scripts I have created.
